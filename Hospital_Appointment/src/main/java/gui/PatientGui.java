@@ -1,5 +1,6 @@
 package gui;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import entity.Patient;
 import test.InitCall;
 
@@ -18,6 +19,7 @@ public class PatientGui extends JFrame implements InitCall {
     @Override
     public void initWindow() {
         JPanel panel = initPanel();
+        FlatLightLaf.setup(); // FlatLaf ile modern görünüm
         add(panel);
         setTitle("Hasta Menü");
         setSize(600, 400);
@@ -48,7 +50,7 @@ public class PatientGui extends JFrame implements InitCall {
         topPanel.add(new JLabel(registerPatient.getBirthDate().toString()));
 
         topPanel.add(new JLabel("Cinsiyet:"));
-        topPanel.add(new JLabel(registerPatient.getGender()));
+        topPanel.add(new JLabel(registerPatient.getGender().name()));
 
         topPanel.add(new JLabel("Telefon:"));
         topPanel.add(new JLabel(registerPatient.getPhoneNumber()));
@@ -120,7 +122,7 @@ public class PatientGui extends JFrame implements InitCall {
         ((JLabel) components[1]).setText(registerPatient.getName());
         ((JLabel) components[3]).setText(registerPatient.getSurname());
         ((JLabel) components[5]).setText(registerPatient.getBirthDate().toString());
-        ((JLabel) components[7]).setText(registerPatient.getGender());
+        ((JLabel) components[7]).setText(registerPatient.getGender().name());
         ((JLabel) components[9]).setText(registerPatient.getPhoneNumber());
         ((JLabel) components[11]).setText(registerPatient.getAddress());
         ((JLabel) components[13]).setText(registerPatient.getTc());

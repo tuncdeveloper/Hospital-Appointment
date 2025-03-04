@@ -1,9 +1,7 @@
 package service;
 
 import entity.Appointment;
-import entity.Doctor;
 import repository.AppointmentDb;
-import repository.ConnectDb;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -14,8 +12,8 @@ public class AppointmentService {
     private AppointmentDb appointmentDb = new AppointmentDb();
 
 
-    public void addAppointment(Appointment appointment, int idDoctorFk,int idPatientFk){
-        appointmentDb.newAppointmentDb(appointment,idDoctorFk,idPatientFk);
+    public void addAppointment(Appointment appointment){
+        appointmentDb.newAppointmentDb(appointment);
     }
 
     public ArrayList<Appointment> showAppointmentFromPatient(int idPatientFk){
@@ -43,7 +41,7 @@ public class AppointmentService {
         for (Appointment appointment : existingAppointments) {
             if (newAppointment.getAppointmentDate().equals(appointment.getAppointmentDate()) &&
                     newAppointment.getAppointmentTime().equals(appointment.getAppointmentTime()) &&
-                    idDoctorFk == appointment.getIdDoctorFk()) {
+                    idDoctorFk == appointment.getDoctorIdFk()) {
 
                 // Çakışma durumu
                 System.out.println("Randevu çakışıyor.");

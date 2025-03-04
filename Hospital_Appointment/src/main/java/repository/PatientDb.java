@@ -1,5 +1,6 @@
 package repository;
 
+import entity.Gender;
 import entity.Patient;
 
 import java.sql.*;
@@ -11,19 +12,19 @@ public class PatientDb extends BaseDb {
 
         Connection connection = super.getConnectDb().getConnection();
 
-        String query = "INSERT INTO patients (name,surname,birth_date,gender,phone_number,address,password,tc) VALUES (?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO patients (name,surname,password,gender,tc,birth_date,phone_number,address) VALUES (?,?,?,?,?,?,?,?)";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setString(1,patient.getName());
             preparedStatement.setString(2,patient.getSurname());
-            preparedStatement.setDate(3, Date.valueOf(patient.getBirthDate()));
-            preparedStatement.setString(4, patient.getGender());
-            preparedStatement.setString(5,patient.getPhoneNumber());
-            preparedStatement.setString(6, patient.getAddress());
-            preparedStatement.setString(7,patient.getPassword());
-            preparedStatement.setString(8,patient.getTc());
+            preparedStatement.setString(3,patient.getPassword());
+            preparedStatement.setString(4, String.valueOf(patient.getGender()));
+            preparedStatement.setString(5,patient.getTc());
+            preparedStatement.setDate(6, Date.valueOf(patient.getBirthDate()));
+            preparedStatement.setString(7,patient.getPhoneNumber());
+            preparedStatement.setString(8, patient.getAddress());
 
             int control = preparedStatement.executeUpdate();
         
@@ -57,11 +58,11 @@ public class PatientDb extends BaseDb {
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()){
-                    patient.setId(rs.getInt("id_patient"));
+                    patient.setId(rs.getInt("patient_id"));
                     patient.setName(rs.getString("name"));
                     patient.setSurname(rs.getString("surname"));
                     patient.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                    patient.setGender(rs.getString("gender"));
+                    patient.setGender(Gender.valueOf(rs.getString("gender").trim()));
                     patient.setPhoneNumber(rs.getString("phone_number"));
                     patient.setAddress(rs.getString("address"));
                     patient.setPassword(rs.getString("password"));
@@ -114,7 +115,7 @@ public class PatientDb extends BaseDb {
         public Patient selectedWithIdPatientDb(int idPatient){
 
             Connection connection = super.getConnectDb().getConnection();
-            String query ="SELECT * FROM patients WHERE id_patient = ?";
+            String query ="SELECT * FROM patients WHERE patient_id = ?";
             Patient patient = new Patient();
 
             try {
@@ -123,11 +124,11 @@ public class PatientDb extends BaseDb {
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()){
-                    patient.setId(rs.getInt("id_patient"));
+                    patient.setId(rs.getInt("patient_id"));
                     patient.setName(rs.getString("name"));
                     patient.setSurname(rs.getString("surname"));
                     patient.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                    patient.setGender(rs.getString("gender"));
+                    patient.setGender(Gender.valueOf(rs.getString("gender").trim()));
                     patient.setPhoneNumber(rs.getString("phone_number"));
                     patient.setAddress(rs.getString("address"));
                     patient.setPassword(rs.getString("password"));
@@ -146,15 +147,16 @@ public class PatientDb extends BaseDb {
 
         Connection connection = super.getConnectDb().getConnection();
 
-        String query = "UPDATE patients SET name = ? , surname = ? , phone_number = ?,address = ? , password = ?  WHERE id_patient = ? ";
+        String query = "UPDATE patients SET name = ? , surname = ?,password = ? , gender = ? ,tc = ? ,birth_date = ? , phone_number = ?,address = ?   WHERE patient_id = ? ";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1,patient.getName());
                 preparedStatement.setString(2,patient.getSurname());
-                preparedStatement.setString(3,patient.getPhoneNumber());
-                preparedStatement.setString(4,patient.getAddress());
-                preparedStatement.setString(5,patient.getPassword());
-                preparedStatement.setInt(6,patient.getId());
+                preparedStatement.setString(3,patient.getPassword());
+                preparedStatement.setString(4,patient.getGender().name());
+                preparedStatement.setString(5,patient.getTc());
+                preparedStatement.setDate(6, Date.valueOf(patient.getBirthDate()));
+                preparedStatement.setString(7,patient.getAddress());
 
                 preparedStatement.executeUpdate();
 
@@ -173,18 +175,18 @@ public class PatientDb extends BaseDb {
             ArrayList<Patient> list = new ArrayList<>();
             Patient patient = new Patient();
             Connection connection = super.getConnectDb().getConnection();
-            String query = "SELECT * FROM patients WHERE id_patient = ?";
+            String query = "SELECT * FROM patients WHERE patient_id = ?";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setInt(1,idPatientFk);
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()){
-                    patient.setId(rs.getInt("id_patient"));
+                    patient.setId(rs.getInt("patient_id"));
                     patient.setName(rs.getString("name"));
                     patient.setSurname(rs.getString("surname"));
                     patient.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                    patient.setGender(rs.getString("gender"));
+                    patient.setGender(Gender.valueOf(rs.getString("gender").trim()));
                     patient.setPhoneNumber(rs.getString("phone_number"));
                     patient.setAddress(rs.getString("address"));
                     patient.setPassword(rs.getString("password"));
@@ -219,11 +221,11 @@ public class PatientDb extends BaseDb {
                 while (rs.next()){
                     Patient patient = new Patient();
 
-                    patient.setId(rs.getInt("id_patient"));
+                    patient.setId(rs.getInt("patient_id"));
                     patient.setName(rs.getString("name"));
                     patient.setSurname(rs.getString("surname"));
                     patient.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                    patient.setGender(rs.getString("gender"));
+                    patient.setGender(Gender.valueOf(rs.getString("gender").trim()));
                     patient.setPhoneNumber(rs.getString("phone_number"));
                     patient.setAddress(rs.getString("address"));
                     patient.setPassword(rs.getString("password"));
@@ -249,7 +251,7 @@ public class PatientDb extends BaseDb {
         Connection connection = super.getConnectDb().getConnection();
 
         // Önce randevuları sil
-        String deleteAppointmentsQuery = "DELETE FROM appointments WHERE id_patient_fk = ?";
+        String deleteAppointmentsQuery = "DELETE FROM appointments WHERE patient_id_fk = ?";
         try {
             PreparedStatement appointmentStatement = connection.prepareStatement(deleteAppointmentsQuery);
             appointmentStatement.setInt(1, patient.getId());
@@ -260,7 +262,7 @@ public class PatientDb extends BaseDb {
         }
 
         // Sonra raporları sil
-        String deleteReportsQuery = "DELETE FROM reports WHERE id_patient_fk = ?";
+        String deleteReportsQuery = "DELETE FROM reports WHERE patient_id_fk = ?";
         try {
             PreparedStatement reportStatement = connection.prepareStatement(deleteReportsQuery);
             reportStatement.setInt(1, patient.getId());
@@ -271,7 +273,7 @@ public class PatientDb extends BaseDb {
         }
 
         // Son olarak hastayı sil
-        String query = "DELETE FROM patients WHERE id_patient = ?";
+        String query = "DELETE FROM patients WHERE patient_id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, patient.getId());
@@ -301,11 +303,11 @@ public class PatientDb extends BaseDb {
                 ResultSet rs = preparedStatement.executeQuery();
                 while (rs.next()){
                     Patient patient = new Patient();
-                    patient.setId(rs.getInt("id_patient"));
+                    patient.setId(rs.getInt("patient_id"));
                     patient.setName(rs.getString("name"));
                     patient.setSurname(rs.getString("surname"));
                     patient.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                    patient.setGender(rs.getString("gender"));
+                    patient.setGender(Gender.valueOf(rs.getString("gender").trim()));
                     patient.setPhoneNumber(rs.getString("phone_number"));
                     patient.setAddress(rs.getString("address"));
                     patient.setPassword(rs.getString("password"));

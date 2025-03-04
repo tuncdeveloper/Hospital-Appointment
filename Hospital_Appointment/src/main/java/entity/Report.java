@@ -2,44 +2,51 @@ package entity;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Report {
 
-    private int idReport;
+    private int reportId;
     private Date reportDate;
     private Time reportTime;
     private String reportContent;
-    private int idDoctorFk;
-    private int idPatientFk;
+    private Integer doctorIdFk;
+    private Integer patientIdFk;
+
     public Report(){
 
     }
 
-    public Report(int idReport, Date reportDate, Time reportTime, String reportContent, int idDoctorFk, int idPatientFk) {
-        this.idReport = idReport;
+    public Report(int reportId, Date reportDate, Time reportTime, String reportContent, Integer doctorIdFk, Integer patientIdFk) {
+        this.reportId = reportId;
         this.reportDate = reportDate;
         this.reportTime = reportTime;
         this.reportContent = reportContent;
-        this.idDoctorFk = idDoctorFk;
-        this.idPatientFk = idPatientFk;
+        this.doctorIdFk = doctorIdFk;
+        this.patientIdFk = patientIdFk;
     }
 
-    public int getIdDoctorFk() {
-        return idDoctorFk;
+    public int getReportId() {
+        return reportId;
     }
 
-    public void setIdDoctorFk(int idDoctorFk) {
-        this.idDoctorFk = idDoctorFk;
+    public void setReportId(int reportId) {
+        this.reportId = reportId;
     }
 
-    public int getIdPatientFk() {
-        return idPatientFk;
+    public Integer getDoctorIdFk() {
+        return doctorIdFk;
     }
 
-    public void setIdPatientFk(int idPatientFk) {
-        this.idPatientFk = idPatientFk;
+    public void setDoctorIdFk(Integer doctorIdFk) {
+        this.doctorIdFk = doctorIdFk;
+    }
+
+    public Integer getPatientIdFk() {
+        return patientIdFk;
+    }
+
+    public void setPatientIdFk(Integer patientIdFk) {
+        this.patientIdFk = patientIdFk;
     }
 
     public String getReportContent() {
@@ -66,13 +73,6 @@ public class Report {
         this.reportTime = reportTime;
     }
 
-    public int getIdReport() {
-        return idReport;
-    }
-
-    public void setIdReport(int idReport) {
-        this.idReport = idReport;
-    }
 
     @Override
     public String toString() {

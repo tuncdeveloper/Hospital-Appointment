@@ -50,8 +50,8 @@ public class AppointmentFromDoctorGui extends JFrame implements InitCall {
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
         for (Appointment appointment : appointments) {
-            String name = patientService.selectedWithIdPatient(appointment.getIdPatientFk()).getName();
-            String surname = patientService.selectedWithIdPatient(appointment.getIdPatientFk()).getSurname();
+            String name = patientService.selectedWithIdPatient(appointment.getPatientIdFk()).getName();
+            String surname = patientService.selectedWithIdPatient(appointment.getPatientIdFk()).getSurname();
             listModel.addElement(("Hasta: " + name + " " + surname +
                     " Tarih: " + appointment.getAppointmentDate() +
                     " Saat: " + appointment.getAppointmentTime()));
@@ -120,7 +120,7 @@ public class AppointmentFromDoctorGui extends JFrame implements InitCall {
             if (selectedIndex != -1) {
                 // Seçilen randevunun ID'sini alın
                 Appointment selectedAppointment = appointments.get(selectedIndex);
-                int appointmentId = selectedAppointment.getAppointment_id();
+                int appointmentId = selectedAppointment.getAppointmentId();
 
                 // Randevuyu sil
                 appointmentService.deleteAppointment(appointmentId);
@@ -177,8 +177,8 @@ public class AppointmentFromDoctorGui extends JFrame implements InitCall {
                         // Tarih ve saat kontrolü
                         if (appointmentService.controlDate(Date.valueOf(updatedDate), Time.valueOf(updatedTime), doctor.getId(), selectedAppointment)) {
                             appointmentService.updateAppointment(selectedAppointment);
-                            String name = patientService.selectedWithIdPatient(selectedAppointment.getIdPatientFk()).getName();
-                            String surname = patientService.selectedWithIdPatient(selectedAppointment.getIdPatientFk()).getSurname();
+                            String name = patientService.selectedWithIdPatient(selectedAppointment.getPatientIdFk()).getName();
+                            String surname = patientService.selectedWithIdPatient(selectedAppointment.getPatientIdFk()).getSurname();
                             listModel.set(selectedIndex, "Hasta: " + name + " " + surname +
                                     " Tarih: " + selectedAppointment.getAppointmentDate() +
                                     " Saat: " + selectedAppointment.getAppointmentTime());

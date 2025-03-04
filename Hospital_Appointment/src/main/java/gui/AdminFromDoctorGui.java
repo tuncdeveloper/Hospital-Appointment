@@ -1,9 +1,6 @@
 package gui;
 
-import entity.Appointment;
-import entity.Doctor; // Doctor sınıfını ekleyin
-import entity.Patient;
-import entity.Report;
+import entity.*;
 import service.AppointmentService;
 import service.DoctorService;
 import service.PatientService;
@@ -131,9 +128,9 @@ public class AdminFromDoctorGui extends JFrame implements InitCall {
                 Doctor newDoctor = new Doctor();
                 newDoctor.setName(name);
                 newDoctor.setSurname(surname);
-                newDoctor.setSpecialty(specialty);
+                newDoctor.setSpecialty(SpecialtyEnum.valueOf(specialty));
                 newDoctor.setPassword(password); // Doktor nesnesine şifreyi ekle
-                newDoctor.setHospitalName("hayat hastanesi");
+                newDoctor.setHospitalName(HospitalEnum.LIV_HOSPITAL);
 
                 doctorListModel.addElement(newDoctor); // Yeni doktoru listeye ekle
                 doctorService.addDoctor(newDoctor);
@@ -174,7 +171,7 @@ public class AdminFromDoctorGui extends JFrame implements InitCall {
         for (Appointment appointment : appointmentService.showAppointmentFromDoctor(selectedDoctor.getId())) {
             // Randevu bilgilerini al
             String patientNames = "";
-            List<Patient> patients = patientService.showPatientFromAppointmentFromReport(appointment.getIdPatientFk()); // Hastaları al
+            List<Patient> patients = patientService.showPatientFromAppointmentFromReport(appointment.getPatientIdFk()); // Hastaları al
 
             for (Patient patient : patients) {
                 patientNames += patient.getName() + " " + patient.getSurname() + ", "; // Hastaların isimlerini birleştir
@@ -198,7 +195,7 @@ public class AdminFromDoctorGui extends JFrame implements InitCall {
         for (Report report : reportService.listFromDoctor(selectedDoctor.getId())) {
             // Rapor bilgilerini al
             String reportPatientNames = "";
-            List<Patient> reportPatients = patientService.showPatientFromAppointmentFromReport(report.getIdPatientFk()); // Raporun hastalarını al
+            List<Patient> reportPatients = patientService.showPatientFromAppointmentFromReport(report.getPatientIdFk()); // Raporun hastalarını al
 
             for (Patient patient : reportPatients) {
                 reportPatientNames += patient.getName() + " " + patient.getSurname() + ", "; // Hastaların isimlerini birleştir

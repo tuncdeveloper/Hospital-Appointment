@@ -72,7 +72,7 @@ public class ReportFromDoctorGui extends JFrame implements InitCall {
             if (selectedIndex != -1) {
                 // Seçilen raporun ID'sini alın
                 Report selectedReport = reports.get(selectedIndex);
-                int reportId = selectedReport.getIdReport();
+                int reportId = selectedReport.getReportId();
 
                 // Raporu veritabanından sil
                 reportService.deleteReport(reportId);
@@ -183,8 +183,8 @@ public class ReportFromDoctorGui extends JFrame implements InitCall {
 
                     // Yeni rapor ekleme
                     Report newReport = new Report();
-                    newReport.setIdDoctorFk(doctor.getId());
-                    newReport.setIdPatientFk(foundPatient.getId()); // Bulunan hastanın ID'si
+                    newReport.setDoctorIdFk(doctor.getId());
+                    newReport.setPatientIdFk(foundPatient.getId()); // Bulunan hastanın ID'si
                     newReport.setReportContent(reportContent);
                     newReport.setReportDate(sqlDate);
                     newReport.setReportTime(sqlTime);
@@ -277,8 +277,8 @@ public class ReportFromDoctorGui extends JFrame implements InitCall {
                     reportService.updateReport(selectedReport);
 
                     // Listeyi güncelle
-                    String patientName = patientService.selectedWithIdPatient(selectedReport.getIdPatientFk()).getName();
-                    String patientSurname = patientService.selectedWithIdPatient(selectedReport.getIdPatientFk()).getSurname();
+                    String patientName = patientService.selectedWithIdPatient(selectedReport.getDoctorIdFk()).getName();
+                    String patientSurname = patientService.selectedWithIdPatient(selectedReport.getPatientIdFk()).getSurname();
 
                     // Raporu biçimlendirilmiş olarak ekleyin
                     String formattedReport = String.format("<html><b style='font-size:20px;'>%s %s</b><br>Tarih: %s, Saat: %s, Rapor: %s</html>",
@@ -328,7 +328,7 @@ public class ReportFromDoctorGui extends JFrame implements InitCall {
             reportListModel.addElement("Hiç rapor yok.");
         } else {
             for (Report report : reports) {
-                Patient patient = patientService.selectedWithIdPatient(report.getIdPatientFk());
+                Patient patient = patientService.selectedWithIdPatient(report.getPatientIdFk());
                 String formattedReport = String.format("<html><b style='font-size:20px;'>%s %s</b><br>Tarih: %s, Saat: %s, Rapor: %s</html>",
                         patient.getName().toUpperCase(), patient.getSurname().toUpperCase(), report.getReportDate(), report.getReportTime(), report.getReportContent());
                 reportListModel.addElement(formattedReport);

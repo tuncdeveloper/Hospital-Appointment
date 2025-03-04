@@ -2,6 +2,7 @@ package gui;
 
 import entity.Admin;
 import entity.Doctor;
+import entity.Gender;
 import entity.Patient;
 import service.AdminService;
 import service.DoctorService;
@@ -138,7 +139,7 @@ public class MenuGui extends JFrame implements InitCall {
                 if (inputPassword.equals(foundAdmin.getPassword())) {
                     isAuthenticated = true;
 
-                    JOptionPane.showMessageDialog(null, "Hoşgeldiniz "+foundAdmin.getName()+" "+foundAdmin.getGender());
+                    JOptionPane.showMessageDialog(null, "Hoşgeldiniz "+foundAdmin.getName());
                     loginDialog.dispose();
                     AdminGui adminGui = new AdminGui(foundAdmin);
                     adminGui.initWindow();
@@ -177,8 +178,8 @@ public class MenuGui extends JFrame implements InitCall {
 
         JLabel genderLabel = new JLabel("Cinsiyet:");
         JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JRadioButton maleButton = new JRadioButton("Erkek");
-        JRadioButton femaleButton = new JRadioButton("Kız");
+        JRadioButton maleButton = new JRadioButton("MALE");
+        JRadioButton femaleButton = new JRadioButton("FEMALE");
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(maleButton);
         genderGroup.add(femaleButton);
@@ -216,7 +217,7 @@ public class MenuGui extends JFrame implements InitCall {
             String name = nameField.getText().trim();
             String surname = surnameField.getText().trim();
             String birthDate = birthDateField.getText().trim();
-            String gender = maleButton.isSelected() ? "Erkek" : femaleButton.isSelected() ? "Kız" : "";
+            String gender = maleButton.isSelected() ? "FEMALE" : femaleButton.isSelected() ? "FEMALE" : "";
             String phone = phoneField.getText().trim();
             String address = addressField.getText().trim();
             String password = new String(passwordField.getPassword()).trim();
@@ -230,7 +231,7 @@ public class MenuGui extends JFrame implements InitCall {
                     patient.setName(name);
                     patient.setSurname(surname);
                     patient.setBirthDate(parsedBirthDate);
-                    patient.setGender(gender);
+                    patient.setGender(Gender.valueOf(gender));
                     patient.setPhoneNumber(phone);
                     patient.setAddress(address);
                     patient.setPassword(password);

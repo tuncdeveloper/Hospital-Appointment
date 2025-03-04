@@ -137,7 +137,7 @@ public class AdminFromPatientGui extends JFrame implements InitCall {
         DefaultListModel<String> appointmentListModel = new DefaultListModel<>();
         for (Appointment appointment : appointmentService.showAppointmentFromPatient(selectedPatient.getId())) {
             String doctorNames = "";
-            List<Doctor> doctors = doctorService.showDoctorFromAppointmentFromReport(appointment.getIdDoctorFk());
+            List<Doctor> doctors = doctorService.showDoctorFromAppointmentFromReport(appointment.getDoctorIdFk());
 
             for (Doctor doctor : doctors) {
                 doctorNames += doctor.getName() + " " + doctor.getSurname() + ", ";
@@ -161,7 +161,7 @@ public class AdminFromPatientGui extends JFrame implements InitCall {
         for (Report report : reportService.listFromPatient(selectedPatient.getId())) {
 
             String reportDoctorNames = "";
-            List<Doctor> reportDoctors = doctorService.showDoctorFromAppointmentFromReport(report.getIdDoctorFk());
+            List<Doctor> reportDoctors = doctorService.showDoctorFromAppointmentFromReport(report.getDoctorIdFk());
 
             for (Doctor doctor : reportDoctors) {
                 reportDoctorNames += doctor.getName() + " " + doctor.getSurname() + ", ";

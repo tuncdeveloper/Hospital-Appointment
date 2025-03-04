@@ -3,26 +3,24 @@ package repository;
 import entity.Appointment;
 import entity.Doctor;
 import entity.Patient;
-import entity.Report;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.SplittableRandom;
 
 public class AppointmentDb extends BaseDb{
 
-    public void newAppointmentDb(Appointment appointment,int idDoctorFk,int idPatientFk){
+    public void newAppointmentDb(Appointment appointment){
 
         Connection connection = super.getConnectDb().getConnection();
 
-        String query = "INSERT INTO appointments (appointment_date , appointment_time , id_doctor_fk , id_patient_fk) VALUES (?,?,?,?)";
+        String query = "INSERT INTO appointments (appointment_date , appointment_time , doctor_id_fk , patient_id_fk) VALUES (?,?,?,?)";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1,appointment.getAppointmentDate());
             preparedStatement.setTime(2,appointment.getAppointmentTime());
-            preparedStatement.setInt(3,idDoctorFk);
-            preparedStatement.setInt(4,idPatientFk);
+            preparedStatement.setInt(3,appointment.getDoctorIdFk());
+            preparedStatement.setInt(4,appointment.getPatientIdFk());
             preparedStatement.executeUpdate();
 
             preparedStatement.close();
@@ -40,8 +38,7 @@ public class AppointmentDb extends BaseDb{
         ArrayList<Appointment> list = new ArrayList<>();
 
         Connection connection = super.getConnectDb().getConnection();
-        Patient patient = new Patient();
-        String query = "SELECT * FROM appointments WHERE id_patient_fk = ?";
+        String query = "SELECT * FROM appointments WHERE patient_id_fk = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -51,14 +48,14 @@ public class AppointmentDb extends BaseDb{
             while (rs.next()){
                 Appointment appointment = new Appointment();
 
-                appointment.setAppointment_id(rs.getInt("id_appointment"));
+                appointment.setAppointmentId(rs.getInt("appointment_id"));
                 appointment.setAppointmentTime(rs.getTime("appointment_time"));
                 appointment.setAppointmentDate(rs.getDate("appointment_date"));
-                appointment.setIdDoctorFk(rs.getInt("id_doctor_fk"));
+                appointment.setDoctorIdFk(rs.getInt("doctor_id_fk"));
+                appointment.setPatientIdFk(rs.getInt("patient_id_fk"));
 
 
                 list.add(appointment);
-                patient.setAppointments(list);
 
             }
 
@@ -76,7 +73,7 @@ public class AppointmentDb extends BaseDb{
 
         Connection connection = super.getConnectDb().getConnection();
 
-        String query = "DELETE FROM appointments WHERE id_appointment= ?";
+        String query = "DELETE FROM appointments WHERE appointment_id= ?";
         try {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -97,7 +94,7 @@ public class AppointmentDb extends BaseDb{
 
         Connection connection = super.getConnectDb().getConnection();
         Doctor doctor = new Doctor();
-        String query = "SELECT * FROM appointments WHERE id_doctor_fk = ?";
+        String query = "SELECT * FROM appointments WHERE doctor_id_fk = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -107,14 +104,14 @@ public class AppointmentDb extends BaseDb{
             while (rs.next()){
                 Appointment appointment = new Appointment();
 
-                appointment.setAppointment_id(rs.getInt("id_appointment"));
+                appointment.setAppointmentId(rs.getInt("appointment_id"));
                 appointment.setAppointmentTime(rs.getTime("appointment_time"));
                 appointment.setAppointmentDate(rs.getDate("appointment_date"));
-                appointment.setIdPatientFk(rs.getInt("id_patient_fk"));
+                appointment.setDoctorIdFk(rs.getInt("doctor_id_fk"));
+                appointment.setPatientIdFk(rs.getInt("patient_id_fk"));
 
 
                 list.add(appointment);
-                doctor.setAppointments(list);
 
             }
 
@@ -133,7 +130,7 @@ public class AppointmentDb extends BaseDb{
         ArrayList<Appointment> appointments = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM appointments WHERE appointment_date = ? AND appointment_time = ? AND id_doctor_fk = ?";
+            String sql = "SELECT * FROM appointments WHERE appointment_date = ? AND appointment_time = ? AND doctor_id_fk = ?";
             PreparedStatement statement = super.getConnectDb().getConnection().prepareStatement(sql);
             statement.setDate(1, date);
             statement.setTime(2, time);
@@ -143,11 +140,11 @@ public class AppointmentDb extends BaseDb{
 
             while (resultSet.next()) {
                 Appointment appointment = new Appointment();
-                appointment.setAppointment_id(resultSet.getInt("id_appointment"));
+                appointment.setAppointmentId(resultSet.getInt("appointment_id"));
                 appointment.setAppointmentDate(resultSet.getDate("appointment_date"));
                 appointment.setAppointmentTime(resultSet.getTime("appointment_time"));
-                appointment.setIdDoctorFk(resultSet.getInt("id_doctor_fk"));
-                appointment.setIdPatientFk(resultSet.getInt("id_patient_fk"));
+                appointment.setDoctorIdFk(resultSet.getInt("doctor_id_fk"));
+                appointment.setPatientIdFk(resultSet.getInt("patient_id_fk"));
 
                 appointments.add(appointment);
             }
@@ -163,13 +160,13 @@ public class AppointmentDb extends BaseDb{
 
     public void updateAppointmentDb(Appointment appointment) {
         Connection connection = super.getConnectDb().getConnection();
-        String query = "UPDATE appointments SET appointment_date = ?, appointment_time = ? WHERE id_appointment = ?";
+        String query = "UPDATE appointments SET appointment_date = ?, appointment_time = ? WHERE appointment_id = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, appointment.getAppointmentDate());
             preparedStatement.setTime(2, appointment.getAppointmentTime());
-            preparedStatement.setInt(3, appointment.getAppointment_id());
+            preparedStatement.setInt(3, appointment.getAppointmentId());
             preparedStatement.executeUpdate();
 
             preparedStatement.close();

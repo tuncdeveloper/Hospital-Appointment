@@ -1,10 +1,5 @@
 package repository;
-
-
-import entity.Doctor;
-
 import java.sql.*;
-import java.util.ArrayList;
 
 public class ConnectDb {
 
@@ -15,21 +10,23 @@ public class ConnectDb {
     private static ConnectDb connectDb ;
     private static Connection connection ;
 
-    static {
-        connectDb = null ;
-    }
+
 
     private ConnectDb () {
 
     }
 
     public Connection getConnection(){
-        if (connection == null) {
-            try {
-                connection = DriverManager.getConnection(url, user,password);
-            } catch (SQLException e) {
-                System.out.println("Bağlantı sırasında bir hata oluştu: " + e.getMessage());
+        try {
+            if (connection == null || connection.isClosed()) {
+                try {
+                    connection = DriverManager.getConnection(url, user,password);
+                } catch (SQLException e) {
+                    System.out.println("Bağlantı sırasında bir hata oluştu: " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return connection;
     }

@@ -42,9 +42,9 @@ public class AppointmentFromPatientGui extends JFrame implements InitCall {
 
         DefaultListModel<String> listModel = new DefaultListModel<>();
         for (Appointment appointment : appointments) {
-            String doctorName = doctorService.selectetWithIdDoctor(appointment.getIdDoctorFk()).getName().toUpperCase(); // Doktor ismi büyük harf
-            String doctorSurname = doctorService.selectetWithIdDoctor(appointment.getIdDoctorFk()).getSurname().toUpperCase(); // Doktor soyismi büyük harf
-            String doctorSpecialty = doctorService.selectetWithIdDoctor(appointment.getIdDoctorFk()).getSpecialty();
+            String doctorName = doctorService.selectetWithIdDoctor(appointment.getDoctorIdFk()).getName().toUpperCase(); // Doktor ismi büyük harf
+            String doctorSurname = doctorService.selectetWithIdDoctor(appointment.getDoctorIdFk()).getSurname().toUpperCase(); // Doktor soyismi büyük harf
+            String doctorSpecialty = String.valueOf(doctorService.selectetWithIdDoctor(appointment.getDoctorIdFk()).getSpecialty());
             // Doktor ismi ve soyadı üstte, diğer bilgiler altta olacak şekilde formatlandı
             String appointmentEntry = String.format("<html><b>%s %s</b><br/>Bölüm: %s<br/>Tarih: %s<br/>Saat: %s</html>",
                     doctorName, doctorSurname, doctorSpecialty, appointment.getAppointmentDate(), appointment.getAppointmentTime());
@@ -91,7 +91,7 @@ public class AppointmentFromPatientGui extends JFrame implements InitCall {
             if (selectedIndex != -1) {
                 // Seçilen randevunun ID'sini alın
                 Appointment selectedAppointment = appointments.get(selectedIndex);
-                int appointmentId = selectedAppointment.getAppointment_id();
+                int appointmentId = selectedAppointment.getAppointmentId();
 
                 // Randevuyu sil
                 appointmentService.deleteAppointment(appointmentId);

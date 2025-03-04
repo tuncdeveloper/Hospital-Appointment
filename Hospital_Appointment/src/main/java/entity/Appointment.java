@@ -2,45 +2,43 @@ package entity;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Appointment {
 
 
-    private int appointment_id;
+    private Integer appointmentId;
     private Date appointmentDate;
     private Time appointmentTime;
-    private int idDoctorFk;
-    private int idPatientFk;
+    private Integer doctorIdFk;
+    private Integer patientIdFk;
 
 
     public Appointment(){
 
     }
 
-    public Appointment(int appointment_id, Date appointmentDate, Time appointmentTime, int idDoctorFk, int idPatientFk) {
-        this.appointment_id = appointment_id;
+    public Appointment(Integer appointmentId, Date appointmentDate, Time appointmentTime, Integer doctorIdFk, Integer patientIdFk) {
+        this.appointmentId = appointmentId;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
-        this.idDoctorFk = idDoctorFk;
-        this.idPatientFk = idPatientFk;
+        this.doctorIdFk = doctorIdFk;
+        this.patientIdFk = patientIdFk;
     }
 
-    public int getIdDoctorFk() {
-        return idDoctorFk;
+    public int getDoctorIdFk() {
+        return doctorIdFk;
     }
 
-    public void setIdDoctorFk(int idDoctorFk) {
-        this.idDoctorFk = idDoctorFk;
+    public void setDoctorIdFk(int doctorIdFk) {
+        this.doctorIdFk = doctorIdFk;
     }
 
-    public int getIdPatientFk() {
-        return idPatientFk;
+    public int getPatientIdFk() {
+        return patientIdFk;
     }
 
-    public void setIdPatientFk(int idPatientFk) {
-        this.idPatientFk = idPatientFk;
+    public void setPatientIdFk(int patientIdFk) {
+        this.patientIdFk = patientIdFk;
     }
 
     public Date getAppointmentDate() {
@@ -59,12 +57,12 @@ public class Appointment {
         this.appointmentTime = appointmentTime;
     }
 
-    public int getAppointment_id() {
-        return appointment_id;
+    public int getAppointmentId() {
+        return appointmentId;
     }
 
-    public void setAppointment_id(int appointment_id) {
-        this.appointment_id = appointment_id;
+    public void setAppointmentId(int appointmentId) {
+        this.appointmentId = appointmentId;
     }
 
     @Override

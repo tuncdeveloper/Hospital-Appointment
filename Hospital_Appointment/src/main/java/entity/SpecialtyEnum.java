@@ -1,0 +1,22 @@
+package entity;
+
+public enum SpecialtyEnum {
+    KARDIYOLOG,
+    DERMATOLOG,
+    NOROLOG,
+    COCUK,
+    ORTOPEDIST ,
+    PSIKIYATRIST(),
+    GASTROENTEROLOG,
+    GENEL_CERRAH,
+    GOZ,
+    KBB,
+    FIZIYOTERAPIST,
+    DAHILIYE,
+    KADIN_DOGUM_UZMANI,
+    ENDOKRINOLOG,
+    NEFROLOG,
+    RADYOLOG,
+    BEYIN_CERRAHI
+
+}

@@ -17,15 +17,15 @@ public class ReportDb extends BaseDb {
 
         Connection connection = super.getConnectDb().getConnection();
 
-        String query = "INSERT INTO reports (report_date,report_time,report_content,id_doctor_fk,id_patient_fk) VALUES (?,?,?,?,?)";
+        String query = "INSERT INTO reports (report_date,report_time,report_content,doctor_id_fk,patient_id_fk) VALUES (?,?,?,?,?)";
         try {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1,report.getReportDate());
             preparedStatement.setTime(2,report.getReportTime());
             preparedStatement.setString(3,report.getReportContent());
-            preparedStatement.setInt(4,report.getIdDoctorFk());
-            preparedStatement.setInt(5,report.getIdPatientFk());
+            preparedStatement.setInt(4,report.getDoctorIdFk());
+            preparedStatement.setInt(5,report.getPatientIdFk());
             preparedStatement.executeUpdate();
 
 
@@ -42,7 +42,7 @@ public class ReportDb extends BaseDb {
         ArrayList<Report> list = new ArrayList<>();
         Patient patient = new Patient();
         Connection connection = super.getConnectDb().getConnection();
-        String query = "SELECT * FROM reports WHERE id_patient_fk= ?";
+        String query = "SELECT * FROM reports WHERE patient_id_fk= ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -52,17 +52,15 @@ public class ReportDb extends BaseDb {
             while(rs.next()){
                 Report report = new Report();
 
-                report.setIdReport(rs.getInt("id_report"));
+                report.setReportId(rs.getInt("report_id"));
                 report.setReportTime(rs.getTime("report_time"));
                 report.setReportDate(rs.getDate("report_date"));
                 report.setReportContent(rs.getString("report_content"));
-                report.setIdDoctorFk(rs.getInt("id_doctor_fk"));
+                report.setDoctorIdFk(rs.getInt("doctor_id_fk"));
+                report.setPatientIdFk(rs.getInt("patient_id_fk"));
 
                 list.add(report);
-                patient.setReports(list);
             }
-
-
 
             preparedStatement.close();
         } catch (SQLException e) {
@@ -75,9 +73,8 @@ public class ReportDb extends BaseDb {
     public ArrayList<Report> showReportFromDoctor(int idDoctorFk){
 
         ArrayList<Report> list = new ArrayList<>();
-        Doctor doctor = new Doctor();
         Connection connection = super.getConnectDb().getConnection();
-        String query = "SELECT * FROM reports WHERE id_doctor_fk= ?";
+        String query = "SELECT * FROM reports WHERE doctor_id_fk= ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -87,14 +84,14 @@ public class ReportDb extends BaseDb {
             while(rs.next()){
                 Report report = new Report();
 
-                report.setIdReport(rs.getInt("id_report"));
+                report.setReportId(rs.getInt("report_id"));
                 report.setReportTime(rs.getTime("report_time"));
                 report.setReportDate(rs.getDate("report_date"));
                 report.setReportContent(rs.getString("report_content"));
-                report.setIdPatientFk(rs.getInt("id_patient_fk"));
+                report.setDoctorIdFk(rs.getInt("doctor_id_fk"));
+                report.setPatientIdFk(rs.getInt("patient_id_fk"));
 
                 list.add(report);
-                doctor.setReports(list);
             }
 
 
@@ -113,7 +110,7 @@ public class ReportDb extends BaseDb {
 
         Connection connection = super.getConnectDb().getConnection();
 
-        String query = "DELETE FROM reports WHERE id_report = ?";
+        String query = "DELETE FROM reports WHERE report_id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1,idReport);
@@ -132,16 +129,16 @@ public class ReportDb extends BaseDb {
 
         Connection connection = super.getConnectDb().getConnection();
         // Sorguyu güncelledik: SET kısmını ve WHERE şartlarını düzenledik.
-        String query = "UPDATE reports SET report_time = ?, report_date = ?, report_content = ? WHERE id_report = ?";
+        String query = "UPDATE reports SET report_time = ?, report_date = ?, report_content = ? , doctor_id_fk = ? , patient_id_fk  WHERE id_report = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            // Burada gerekli tüm parametreleri ekliyoruz
+
             preparedStatement.setTime(1, report.getReportTime());
             preparedStatement.setDate(2, report.getReportDate());
             preparedStatement.setString(3, report.getReportContent());
-            preparedStatement.setInt(4, report.getIdReport()); // Bu id_report'ı WHERE koşuluna ekliyoruz
-
+            preparedStatement.setInt(4, report.getDoctorIdFk()); // Bu id_report'ı WHERE koşuluna ekliyoruz
+            preparedStatement.setInt(5,report.getPatientIdFk());
             preparedStatement.executeUpdate();
 
             preparedStatement.close();

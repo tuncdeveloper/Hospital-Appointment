@@ -2,15 +2,18 @@ package service;
 
 import entity.Admin;
 import repository.AdminDb;
-import repository.ConnectDb;
 
 import java.util.ArrayList;
 
 public class AdminService {
 
-    AdminDb adminDb = new AdminDb();
+    private AdminDb adminDb;
 
-    public void setAdmin(Admin admin){
+    public AdminService(){
+        this.adminDb=new AdminDb();
+    }
+
+    public void addAdmin(Admin admin){
         adminDb.addAdminDb(admin);
     }
 

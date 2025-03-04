@@ -128,7 +128,7 @@ public class AdminGui extends JFrame implements InitCall {
                 newAdmin.setSurname(surname);
                 newAdmin.setPassword(password);
 
-                adminService.setAdmin(newAdmin);
+                adminService.addAdmin(newAdmin);
 
                 JOptionPane.showMessageDialog(dialog, newAdmin.getName() + " başarıyla eklendi.", "Başarılı", JOptionPane.INFORMATION_MESSAGE);
                 dialog.dispose(); // Diyalog penceresini kapat

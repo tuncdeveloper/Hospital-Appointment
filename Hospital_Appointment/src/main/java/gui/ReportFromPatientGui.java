@@ -47,9 +47,9 @@ public class ReportFromPatientGui extends JFrame implements InitCall {
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
         for (Report report : reports) {
-            String doctorName = doctorService.selectetWithIdDoctor(report.getIdDoctorFk()).getName().toUpperCase(); // Doktor ismi büyük harf
-            String doctorSurname = doctorService.selectetWithIdDoctor(report.getIdDoctorFk()).getSurname().toUpperCase(); // Doktor soyismi büyük harf
-            String doctorSpecialty = doctorService.selectetWithIdDoctor(report.getIdDoctorFk()).getSpecialty();
+            String doctorName = doctorService.selectetWithIdDoctor(report.getDoctorIdFk()).getName().toUpperCase(); // Doktor ismi büyük harf
+            String doctorSurname = doctorService.selectetWithIdDoctor(report.getDoctorIdFk()).getSurname().toUpperCase(); // Doktor soyismi büyük harf
+            String doctorSpecialty = String.valueOf(doctorService.selectetWithIdDoctor(report.getDoctorIdFk()).getSpecialty());
             // Doktor ismi ve soyadı üstte, diğer bilgiler altta olacak şekilde formatlandı
             String reportEntry = String.format("<html><b>%s %s</b><br/>Bölüm: %s<br/>Tarih: %s<br/>Saat: %s<br/>Rapor: %s</html>",
                     doctorName, doctorSurname, doctorSpecialty, report.getReportDate(), report.getReportTime(), report.getReportContent());

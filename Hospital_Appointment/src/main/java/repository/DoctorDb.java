@@ -1,8 +1,10 @@
     package repository;
 
     import entity.Doctor;
+    import entity.Gender;
+    import entity.HospitalEnum;
+    import entity.SpecialtyEnum;
 
-    import javax.print.Doc;
     import java.sql.Connection;
     import java.sql.PreparedStatement;
     import java.sql.ResultSet;
@@ -14,26 +16,32 @@
 
         public void newDoctorDb(Doctor doctor) {
             Connection connection = super.getConnectDb().getConnection(); // Bağlantıyı alıyoruz
-            String query = "INSERT INTO doctors (name, surname,specialty,hospital_name,password) VALUES (?,?,?,?,?)";
 
+            // Bağlantı kontrolü
+            if (connection == null) {
+                throw new RuntimeException("Veritabanı bağlantısı sağlanamadı.");
+            }
+
+            String query = "INSERT INTO doctors (name, surname, password, gender, specialty, hospital_name) VALUES (?,?,?,?,?,?)";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, doctor.getName());
                 preparedStatement.setString(2, doctor.getSurname());
-                preparedStatement.setString(3,doctor.getSpecialty());
-                preparedStatement.setString(4,doctor.getHospitalName());
-                preparedStatement.setString(5,doctor.getPassword());
+                preparedStatement.setString(3, doctor.getPassword());
+                preparedStatement.setString(4, doctor.getGender().name().trim());  // Enum value'ını string'e dönüştürme
+                preparedStatement.setString(5, String.valueOf(doctor.getSpecialty()).trim());
+                preparedStatement.setString(6, String.valueOf(doctor.getHospitalName()).trim());
 
                 preparedStatement.executeUpdate();
 
-
-
-                System.out.println("ekleme basarili");
+                System.out.println("Doktor başarıyla eklendi.");
                 preparedStatement.close();
             } catch (SQLException e) {
-                throw new RuntimeException("Doktor ekleme sırasında bir hata oluştu: " + e.getMessage());
+                // Detaylı hata mesajı ver
+                throw new RuntimeException("Doktor ekleme sırasında bir hata oluştu: " + e.getMessage(), e);
             }
         }
+
 
 
         public void deleteDoctorDb(Doctor doctor) {
@@ -41,21 +49,21 @@
 
             try {
                 // Raporları sil
-                String queryReport = "DELETE FROM reports WHERE id_doctor_fk = ?";
+                String queryReport = "DELETE FROM reports WHERE doctor_id_fk = ?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(queryReport)) {
                     preparedStatement.setInt(1, doctor.getId());
                     preparedStatement.executeUpdate();
                 }
 
                 // Randevuları sil
-                String queryAppointment = "DELETE FROM Appointments WHERE id_doctor_fk = ?";
+                String queryAppointment = "DELETE FROM Appointments WHERE doctor_id_fk = ?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(queryAppointment)) {
                     preparedStatement.setInt(1, doctor.getId());
                     preparedStatement.executeUpdate();
                 }
 
                 // Doktoru sil
-                String query = "DELETE FROM doctors WHERE id_doctor = ?";
+                String query = "DELETE FROM doctors WHERE doctor_id = ?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setInt(1, doctor.getId());
                     int rowsAffected = preparedStatement.executeUpdate();
@@ -86,12 +94,13 @@
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()){
-                    doctor.setId(rs.getInt("id_doctor"));
+                    doctor.setId(rs.getInt("doctor_id"));
                     doctor.setName(rs.getString("name"));
                     doctor.setSurname(rs.getString("surname"));
-                    doctor.setSpecialty(rs.getString("specialty"));
-                    doctor.setHospitalName(rs.getString("hospital_name"));
+                    doctor.setGender(Gender.valueOf(rs.getString("gender").trim()));
                     doctor.setPassword(rs.getString("password"));
+                    doctor.setSpecialty(SpecialtyEnum.valueOf(rs.getString("specialty").trim()));
+                    doctor.setHospitalName(HospitalEnum.valueOf(rs.getString("hospital_name").trim()));
 
                 }
 
@@ -112,7 +121,7 @@
 
             Connection connection = super.getConnectDb().getConnection();
 
-            String query = "SELECT  id_doctor,name , surname , specialty,hospital_name FROM doctors";
+            String query = "SELECT * FROM doctors";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
 
@@ -120,11 +129,12 @@
 
                 while (rs.next()){
                     Doctor doctor = new Doctor();
-                    doctor.setId(rs.getInt("id_doctor"));
+                    doctor.setId(rs.getInt("doctor_id"));
                     doctor.setName(rs.getString("name"));
                     doctor.setSurname(rs.getString("surname"));
-                    doctor.setSpecialty(rs.getString("specialty"));
-                    doctor.setHospitalName(rs.getString("hospital_name"));
+                    doctor.setGender(Gender.valueOf(rs.getString("gender").trim()));
+                    doctor.setSpecialty(SpecialtyEnum.valueOf(rs.getString("specialty").trim()));
+                    doctor.setHospitalName(HospitalEnum.valueOf(rs.getString("hospital_name").trim()));
                     list.add(doctor);
                 }
 
@@ -145,19 +155,20 @@
             Doctor doctor = new Doctor();
 
             Connection connection = super.getConnectDb().getConnection();
-            String query = "SELECT * FROM doctors WHERE id_doctor = ?";
+            String query = "SELECT * FROM doctors WHERE doctor_id = ?";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setInt(1, idDoctor);  // Burada id'yi sorguya ekliyoruz
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
-                    doctor.setId(rs.getInt("id_doctor"));
+                    doctor.setId(rs.getInt("doctor_id"));
                     doctor.setName(rs.getString("name"));
                     doctor.setSurname(rs.getString("surname"));
-                    doctor.setSpecialty(rs.getString("specialty"));
-                    doctor.setHospitalName(rs.getString("hospital_name"));
+                    doctor.setGender(Gender.valueOf(rs.getString("gender").trim()));
                     doctor.setPassword(rs.getString("password"));
+                    doctor.setSpecialty(SpecialtyEnum.valueOf(rs.getString("specialty").trim()));
+                    doctor.setHospitalName(HospitalEnum.valueOf(rs.getString("hospital_name").trim()));
                 }
 
                 rs.close();
@@ -174,7 +185,7 @@
             ArrayList<Doctor> list = new ArrayList<>();
 
             Connection connection = super.getConnectDb().getConnection();
-            String query = "SELECT * FROM doctors WHERE id_doctor = ?";
+            String query = "SELECT * FROM doctors WHERE doctor_id = ?";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setInt(1,idDoctorFk);
@@ -183,11 +194,12 @@
                 while (rs.next()){
                     Doctor doctor = new Doctor();
 
-                    doctor.setId(rs.getInt("id_doctor"));
+                    doctor.setId(rs.getInt("doctor_id"));
                     doctor.setName(rs.getString("name"));
                     doctor.setSurname(rs.getString("surname"));
-                    doctor.setHospitalName(rs.getString("hospital_name"));
-                    doctor.setSpecialty(rs.getString("specialty"));
+                    doctor.setGender(Gender.valueOf(rs.getString("gender").trim()));
+                    doctor.setHospitalName(HospitalEnum.valueOf(rs.getString("hospital_name").trim()));
+                    doctor.setSpecialty(SpecialtyEnum.valueOf(rs.getString("specialty").trim()));
                     list.add(doctor);
 
                 }

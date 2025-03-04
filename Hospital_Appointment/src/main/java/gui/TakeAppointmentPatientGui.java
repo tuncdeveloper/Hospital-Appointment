@@ -103,12 +103,15 @@ public class TakeAppointmentPatientGui extends JFrame implements InitCall {
                     }
                     appointment.setAppointmentDate(selectedDate);
                     appointment.setAppointmentTime(selectedTime);
+                    appointment.setDoctorIdFk(selectedDoctor.getId());
+                    appointment.setPatientIdFk(foundPatient.getId());
+
+
                     // Randevu kontrolü
                     boolean isAvailable = appointmentService.controlDate(selectedDate, selectedTime, selectedDoctor.getId(), appointment);
                     if (isAvailable) {
                         // Randevu ayarla
-
-                        appointmentService.addAppointment(appointment, selectedDoctor.getId(), foundPatient.getId());
+                        appointmentService.addAppointment(appointment);
                         JOptionPane.showMessageDialog(null, "Randevu başarıyla alındı: " + selectedDate + " " + selectedTime + " Doktor: " + selectedDoctor.getName());
                     }else {
                         JOptionPane.showMessageDialog(null, "Bu tarih ve saat için doktorun başka bir randevusu var!");

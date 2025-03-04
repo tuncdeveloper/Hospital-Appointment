@@ -1,30 +1,39 @@
 package entity;
 
-public class Person {
+public abstract class Person {
 
-    private int id;
+    private Integer id;
     private String name;
     private String surname;
     private String password;
+    private Gender gender;
     //private Gender gender ;
 
     public Person () {
 
     }
 
-    public Person(String name, String surname,String password) {
-
-        this.name = name;
-        this.surname = surname;
-        this.password = password;
-    }
-
-    public Person(int id, String name, String surname,String password) {
+    public Person(Integer id, String name, String surname, String password, Gender gender) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.password = password;
+        this.gender = gender;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+
 
     public int getId() {
         return id;
